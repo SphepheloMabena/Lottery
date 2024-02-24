@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class RetrofitTokenHelper {
+object RetrofitTokenHelper {
 
     private val baseUrl = "https://lotteryapp.onrender.com"
 
