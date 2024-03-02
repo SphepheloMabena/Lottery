@@ -1,6 +1,8 @@
 package com.example.lottery.models
 
+import com.google.gson.annotations.SerializedName
+
 data class TokenResponse(
-    val access_token: String,
+     @SerializedName("access_token") val access_token: String,
     val token_type: String
 )

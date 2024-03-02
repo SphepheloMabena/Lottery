@@ -9,11 +9,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lottery.Repository.LotteryRepository
 import com.example.lottery.dataStore
+import com.example.lottery.models.PowerballResponse
+import com.example.lottery.models.Token
+import com.example.lottery.models.TokenRequestBody
 import com.example.lottery.models.TokenResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LotteryViewModel(
     private val repository: LotteryRepository = LotteryRepository()
@@ -21,15 +29,48 @@ class LotteryViewModel(
 
     private val TOKEN_PREFERENCES = stringPreferencesKey("token")
 
-    fun initData(context: Context) {
+    fun initData() {
         viewModelScope.launch(Dispatchers.IO) {
-            getToken(context)?.access_token?.let { updatePreference(context, it) }
+            getToken()
         }
     }
 
-    private suspend fun getToken(context: Context): TokenResponse? {
-        return repository.getRetrofitToken().getToken().body()
+    fun getPowerball() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getPowerballNumbers()?.forEach {
+                println("Date: ${it.date}")
+            }
+        }
     }
+
+    private suspend fun getToken() {
+        val usernameRequestBody = RequestBody.create(MultipartBody.FORM, "Sphe15")
+        val passwordRequestBody = RequestBody.create(MultipartBody.FORM, "Mabena@01")
+        val token = LotteryRepository().getRetrofitToken().getToken(
+            username = usernameRequestBody,
+            password = passwordRequestBody
+        ).enqueue(
+            object : Callback<TokenResponse> {
+                override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                    //onResult(null)
+                    t.message
+
+                }
+                override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                    // val addedUser = response.body()
+                    //onResult(addedUser)
+                    response.message()
+                    response.raw()
+
+                    Token.tokenValue = response.body()?.access_token ?: ""
+                }
+            }
+        )
+    }
+    private suspend fun getPowerballNumbers(): PowerballResponse? {
+        return repository.getPowerballNumber().getPowerballResults().body()
+    }
+
 
     private suspend fun updatePreference(context: Context, token: String) {
 
