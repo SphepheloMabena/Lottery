@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lottery.Repository.LotteryRepository
@@ -29,17 +31,23 @@ class LotteryViewModel(
 
     private val TOKEN_PREFERENCES = stringPreferencesKey("token")
 
+    private val _powerballResults = MutableLiveData<PowerballResponse>()
+    val powerballResults: LiveData<PowerballResponse> = _powerballResults
+
     fun initData() {
         viewModelScope.launch(Dispatchers.IO) {
             getToken()
         }
     }
-
-    fun getPowerball() {
+    init {
         viewModelScope.launch(Dispatchers.IO) {
-            getPowerballNumbers()?.forEach {
-                println("Date: ${it.date}")
-            }
+            getToken()
+        }
+    }
+
+    fun getPowerballResults() {
+        viewModelScope.launch() {
+            _powerballResults.value = getPowerballNumbers()
         }
     }
 
@@ -59,7 +67,7 @@ class LotteryViewModel(
                     response.raw()
 
                     Token.tokenValue = response.body()?.access_token ?: ""
-                    getPowerball()
+                    getPowerballResults()
                 }
             }
         )

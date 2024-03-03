@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // At the top level of your kotlin file:
 // At the top level of your kotlin file:
-
+        val viewModel: LotteryViewModel = LotteryViewModel()
 
         setContent {
             LotteryTheme {
@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     NavHost(navController, startDestination = Screen.Results.route, Modifier.padding(innerPadding)) {
-                        composable(Screen.Results.route) { PowerballResults()}
+                        composable(Screen.Results.route) { PowerballResults(viewModel)}
                         composable(Screen.Upload.route) { UploadPowerballResults() }
                     }
                 }
