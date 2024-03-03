@@ -44,15 +44,11 @@ class LotteryViewModel(
     }
 
     private suspend fun getToken() {
-        val usernameRequestBody = RequestBody.create(MultipartBody.FORM, "Sphe15")
-        val passwordRequestBody = RequestBody.create(MultipartBody.FORM, "Mabena@01")
-        val token = LotteryRepository().getRetrofitToken().getToken(
-            username = usernameRequestBody,
-            password = passwordRequestBody
-        ).enqueue(
+        val token = LotteryRepository().getRetrofitToken().enqueue(
             object : Callback<TokenResponse> {
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                     //onResult(null)
+                    //server is down
                     t.message
 
                 }
@@ -63,12 +59,13 @@ class LotteryViewModel(
                     response.raw()
 
                     Token.tokenValue = response.body()?.access_token ?: ""
+                    getPowerball()
                 }
             }
         )
     }
     private suspend fun getPowerballNumbers(): PowerballResponse? {
-        return repository.getPowerballNumber().getPowerballResults().body()
+        return repository.getPowerballNumber()
     }
 
 
