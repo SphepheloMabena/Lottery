@@ -16,6 +16,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.lottery.ui.theme.LotteryTheme
 import com.example.lottery.viewModels.LotteryViewModel
 
@@ -31,6 +34,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LotteryTheme {
+                val navController = rememberNavController()
+
+                NavHost(navController = navController, startDestination = "profile") {
+                    composable("profile") { // example
+                        }
+                    composable("friendslist") {// FriendsList( /* ... */ )
+                    }
+                    // Add more destinations similarly.
+                }
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
