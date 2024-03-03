@@ -4,6 +4,8 @@ import com.example.lottery.api.LoterryApi
 import com.example.lottery.api.RetrofitHelper
 import com.example.lottery.api.RetrofitTokenHelper
 import com.example.lottery.api.TokenApi
+import com.example.lottery.models.PowerballRequestBody
+import com.example.lottery.models.PowerballRequestSuccess
 import com.example.lottery.models.PowerballResponse
 import com.example.lottery.models.TokenResponse
 import okhttp3.MultipartBody
@@ -13,6 +15,7 @@ import retrofit2.Response
 import retrofit2.create
 
 class LotteryRepository {
+    private val helper = RetrofitHelper.getInstance().create(LoterryApi::class.java)
 
      fun getRetrofitToken(): Call<TokenResponse> {
          val usernameRequestBody = RequestBody.create(MultipartBody.FORM, "Sphe15")
@@ -23,7 +26,10 @@ class LotteryRepository {
         )
     }
     suspend fun getPowerballNumber(): PowerballResponse? {
-        return RetrofitHelper.getInstance().create(LoterryApi::class.java).getPowerballResults().body()
+        return helper.getPowerballResults().body()
+    }
+    fun addPowerballResult(results: PowerballRequestBody): Call<PowerballRequestSuccess> {
+        return helper.addPowerballResult(results)
     }
 
 }
