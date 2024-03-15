@@ -2,6 +2,7 @@ package com.example.lottery.viewModels
 
 import android.content.ContentQueryMap
 import android.content.Context
+import android.widget.Toast
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -11,6 +12,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lottery.Repository.LotteryRepository
 import com.example.lottery.dataStore
+import com.example.lottery.models.PowerballRequestBody
+import com.example.lottery.models.PowerballRequestSuccess
 import com.example.lottery.models.PowerballResponse
 import com.example.lottery.models.Token
 import com.example.lottery.models.TokenRequestBody
@@ -69,6 +72,24 @@ class LotteryViewModel(
                     Token.tokenValue = response.body()?.access_token ?: ""
                     getPowerballResults()
                 }
+            }
+        )
+    }
+
+     fun addPowerballNumbers(body:PowerballRequestBody, context: Context) {
+        LotteryRepository().addPowerballResult(body).enqueue(
+            object: Callback<PowerballRequestSuccess> {
+                override fun onResponse(
+                    call: Call<PowerballRequestSuccess>,
+                    response: Response<PowerballRequestSuccess>
+                ) {
+                    Toast.makeText(context, "Results Uploaded Successfully", Toast.LENGTH_LONG).show()
+                }
+
+                override fun onFailure(call: Call<PowerballRequestSuccess>, t: Throwable) {
+                    Toast.makeText(context, "Error Uploading Results", Toast.LENGTH_LONG).show()
+                }
+
             }
         )
     }
