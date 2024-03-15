@@ -3,7 +3,9 @@ package com.example.lottery.views
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -13,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.lottery.viewModels.LotteryViewModel
@@ -25,7 +28,7 @@ fun PowerballResults(viewModel: LotteryViewModel) {
                 Text(
                     text = powerballItem.date,
                     modifier = Modifier.padding(
-                        start = 4.dp,
+                        start = 16.dp,
                         top = 8.dp
                     ),
                     style = TextStyle(color = Color.Green)
@@ -42,7 +45,7 @@ fun PowerballResults(viewModel: LotteryViewModel) {
 
 @Composable
 fun powerballResultItem(date: String, numbers:Array<Int>) {
-    Column {
+    Column(modifier = Modifier.padding(20.dp)) {
         Text(text = "2024-02-8",
             modifier = Modifier.padding(
                 start = 4.dp,
@@ -61,7 +64,10 @@ fun powerballResultItem(date: String, numbers:Array<Int>) {
 
 @Composable
 fun powerballEntity(number:Int) {
-    Box(Modifier.border(width = 2.dp, Color.Yellow, CircleShape)) {
-        Text(text = "${number}")
+    Box(Modifier.border(width = 2.dp, Color.Yellow, CircleShape)
+        .width(40.dp)
+    .height(40.dp)) {
+        Text(text = "${number}",
+            modifier = Modifier.padding(8.dp))
     }
 }
