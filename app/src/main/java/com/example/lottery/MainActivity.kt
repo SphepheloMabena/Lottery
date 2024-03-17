@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     NavHost(navController, startDestination = Screen.Results.route, Modifier.padding(innerPadding)) {
-                        composable(Screen.Results.route) { PowerballResults(viewModel)}
+                        composable(Screen.Results.route) { PowerballResults(viewModel, baseContext)}
                         composable(Screen.Upload.route) { UploadPowerballResults(viewModel, baseContext) }
                     }
                 }

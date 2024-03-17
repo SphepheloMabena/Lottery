@@ -37,30 +37,34 @@ class LotteryViewModel(
     private val _powerballResults = MutableLiveData<PowerballResponse>()
     val powerballResults: LiveData<PowerballResponse> = _powerballResults
 
-    fun initData() {
+    private val _loadingResults = MutableLiveData<Boolean>()
+    val loadingReuslts: LiveData<Boolean> = _loadingResults
+
+
+    fun initData(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            getToken()
+            getToken(context)
         }
     }
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            getToken()
-        }
+        _loadingResults.value = true
     }
 
     fun getPowerballResults() {
         viewModelScope.launch() {
+            _loadingResults.value = false
             _powerballResults.value = getPowerballNumbers()
         }
     }
 
-    private suspend fun getToken() {
+    private suspend fun getToken(context: Context) {
         val token = LotteryRepository().getRetrofitToken().enqueue(
             object : Callback<TokenResponse> {
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                     //onResult(null)
                     //server is down
                     t.message
+                    Toast.makeText(context, "Server Down: ${t.message}", Toast.LENGTH_LONG).show()
 
                 }
                 override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
