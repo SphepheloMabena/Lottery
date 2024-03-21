@@ -18,8 +18,8 @@ class LotteryRepository {
     private val helper = RetrofitHelper.getInstance().create(LoterryApi::class.java)
 
      fun getRetrofitToken(): Call<TokenResponse> {
-         val usernameRequestBody = RequestBody.create(MultipartBody.FORM, "Sphe15")
-         val passwordRequestBody = RequestBody.create(MultipartBody.FORM, "Mabena@01")
+         val usernameRequestBody = RequestBody.create(MultipartBody.FORM, "admin")
+         val passwordRequestBody = RequestBody.create(MultipartBody.FORM, "2024Init")
         return RetrofitTokenHelper.getInstance().create(TokenApi::class.java).getToken(
             username = usernameRequestBody,
             password = passwordRequestBody

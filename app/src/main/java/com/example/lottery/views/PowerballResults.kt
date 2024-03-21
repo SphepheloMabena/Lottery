@@ -31,11 +31,16 @@ import com.example.lottery.viewModels.LotteryViewModel
 fun PowerballResults(viewModel: LotteryViewModel, context: Context) {
     viewModel.initData(context = context)
     viewModel.powerballResults.observeAsState().value?.let {
+
+
         LazyColumn(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(it) { powerballItem ->
+                val lastItem = powerballItem.numbers.last()
+                var position = 0
+                val lastPosition = powerballItem.numbers.lastIndex
                 Text(
                     text = powerballItem.date,
                     modifier = Modifier.padding(
@@ -47,9 +52,12 @@ fun PowerballResults(viewModel: LotteryViewModel, context: Context) {
                 LazyRow(modifier = Modifier.padding(start = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly) {
                     items(powerballItem.numbers) { number ->
-                        powerballEntity(number = number)
+                        val isLastPosition = (lastItem == number) && (position == lastPosition)
+                        powerballEntity(number = number, isPowerballNumber = isLastPosition)
+                        ++position
                     }
                 }
+
             }
         }
     }
@@ -82,7 +90,7 @@ fun powerballResultItem(date: String, numbers:Array<Int>) {
         )
         LazyRow() {
             items(numbers) { number ->
-                powerballEntity(number = number)
+                powerballEntity(number = number, false)
             }
         }
     }
@@ -90,14 +98,15 @@ fun powerballResultItem(date: String, numbers:Array<Int>) {
 
 
 @Composable
-fun powerballEntity(number:Int) {
+fun powerballEntity(number:Int, isPowerballNumber: Boolean) {
+    val colour =  if (isPowerballNumber) { Color.Red} else {Color.Yellow}
     Box(
-        Modifier
-            .border(width = 2.dp, Color.Yellow, CircleShape)
+        modifier = Modifier
+            .border(width = 2.dp, colour, CircleShape)
             .width(40.dp)
             .height(40.dp)
-            .padding(4.dp)) {
-        Text(text = "${number}",
-            modifier = Modifier.padding(8.dp))
+            .padding(4.dp),
+        contentAlignment = Alignment.Center) {
+        Text(text = "${number}")
     }
 }
