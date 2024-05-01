@@ -52,8 +52,8 @@ class LotteryViewModel(
 
     fun getPowerballResults() {
         viewModelScope.launch() {
-            _loadingResults.value = false
             _powerballResults.value = getPowerballNumbers()
+            _loadingResults.value = false
         }
     }
 
